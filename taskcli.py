@@ -32,7 +32,7 @@ def add_task(description):
 def delete_task(task_id, next_id):
 #ex: python taskcli.py taskcli delete 1
     for task in tasklist:
-        if task.get("ID") == task_id:
+        if task["ID"] == task_id:
             tasklist.remove(task)
             print("Task Deleted")
 # if the user removes all tasks, the next_id will be reset back to 1
@@ -43,7 +43,7 @@ def delete_task(task_id, next_id):
 def update_task(updated_description, task_id):
 #ex: python taskcli.py taskcli update 1 "convert to islam"
     for task in tasklist:
-        if task.get("ID") == task_id:
+        if task["ID"] == task_id:
             task["description"] = updated_description
             print("Task Updated")
 def clear_tasklist():
@@ -59,7 +59,7 @@ def list_tasklist():
 def mark_task(updated_status, task_id):
     if task_id != "everything":
         for task in tasklist:
-            if task.get("ID") == task_id:
+            if task["ID"] == task_id:
                 task["status"] = updated_status
         print(f"Task marked as {updated_status}")
     else:
@@ -87,14 +87,18 @@ if sys.argv[1] == "taskcli":
             list_tasklist()
         else:
             if sys.argv[3] == "todo":
-                filtered_tasklist = [task for task in tasklist if task.get("status") == "todo"]
+                filtered_tasklist = [task for task in tasklist if task["status"] == "todo"]
             elif sys.argv[3] == "in-progress":
-                filtered_tasklist = [task for task in tasklist if task.get("status") == "in-progress"]
+                filtered_tasklist = [task for task in tasklist if task["status"] == "in-progress"]
             elif sys.argv[3] == "done":
-                filtered_tasklist = [task for task in tasklist if task.get("status") == "done"]
+                filtered_tasklist = [task for task in tasklist if task["status"] == "done"]
             print("The filtered tasklist:")
-            for task in filtered_tasklist:
-                print(task)
+            if len(filtered_tasklist) == 0:
+                print("...")
+                print("Theres nothing.")
+            else:
+                for task in filtered_tasklist:
+                    print(task)
     elif sys.argv[2] == "update":
         try:
             task_id = int(sys.argv[3])
