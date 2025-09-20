@@ -42,6 +42,7 @@ This will update the task's description and show the updated tasklist.
 
 This will update the status of that task's ID to either todo/in-progress/done depending on what you typed in, and will also show the updated tasklist.
 **NOTE:**
+
 > **You can put the task-id as "everything" to mark every task as todo/in-progress/done**
 > **Example: `taskcli taskcli mark everything done`**
 
