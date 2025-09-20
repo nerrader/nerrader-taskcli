@@ -38,6 +38,8 @@ def delete_task(task_id, next_id):
 # if the user removes all tasks, the next_id will be reset back to 1
     if len(tasklist) == 0:
         return 1
+    else:
+        return next_id
 def update_task(updated_description, task_id):
 #ex: python taskcli.py taskcli update 1 "convert to islam"
     for task in tasklist:
@@ -67,6 +69,7 @@ def mark_task(updated_status, task_id):
 # if statement spam to see what the user wants to do
 if sys.argv[1] == "taskcli":
     if sys.argv[2] == "add":
+        print(sys.argv[3])
         add_task(sys.argv[3])
         list_tasklist()
     elif sys.argv[2] == "delete":
@@ -80,7 +83,7 @@ if sys.argv[1] == "taskcli":
     elif sys.argv[2] == "clear":
         tasklist, next_id = clear_tasklist()
     elif sys.argv[2] == "list":
-        if len(sys.argv) > 3:
+        if len(sys.argv) < 4:
             list_tasklist()
         else:
             if sys.argv[3] == "todo":
