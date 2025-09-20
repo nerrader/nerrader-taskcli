@@ -16,6 +16,7 @@ As said before, you must navigate to the folder that you downloaded the python f
 > Example: `taskcli taskcli add "prepare for school"`
 
 It will then show you that the task has been created, as well as the created task's ID and status, and the current tasklist.
+
 **NOTE:**
 > When doing future operations with tasks after you have created it such as deleting, updating, or marking the task, refer to its ID rather than the name/description of the task.
 
