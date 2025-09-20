@@ -31,26 +31,23 @@ def add_task(description):
     return task
 def delete_task(task_id, next_id):
 #ex: python taskcli.py taskcli delete 1
-    for dictionary in tasklist:
-        if dictionary.get("ID") == task_id:
-            tasklist.remove(dictionary)
+    for task in tasklist:
+        if task.get("ID") == task_id:
+            tasklist.remove(task)
             print("Task Deleted")
 # if the user removes all tasks, the next_id will be reset back to 1
     if len(tasklist) == 0:
-        next_id = 1
-        return next_id
+        return 1
 def update_task(updated_description, task_id):
-#ex: python taskcli.py taskcli update 1 both "convert to islam" "in progress"
-    for dictionary in tasklist:
-        if dictionary.get("ID") == task_id:
-            dictionary["description"] = updated_description
+#ex: python taskcli.py taskcli update 1 "convert to islam"
+    for task in tasklist:
+        if task.get("ID") == task_id:
+            task["description"] = updated_description
             print("Task Updated")
 def clear_tasklist():
 #ex: python taskcli.py taskcli clear
-    tasklist = []
-    next_id = 1
     print("Tasklist cleared")
-    return tasklist, next_id
+    return [], 1
 def list_tasklist():
 #ex: python taskcli.py taskcli list
     print("The current tasklist:")
@@ -58,15 +55,15 @@ def list_tasklist():
         print(dictionary)
     
 def mark_task(updated_status, task_id):
-    if task_id == "everything":
-        for task in tasklist:
-            task["status"] = updated_status
-        print(f"All tasks marked as {updated_status}")
-    else:
+    if task_id != "everything":
         for task in tasklist:
             if task.get("ID") == task_id:
                 task["status"] = updated_status
         print(f"Task marked as {updated_status}")
+    else:
+        for task in tasklist:
+            task["status"] = updated_status
+        print(f"All tasks marked as {updated_status}")
 # if statement spam to see what the user wants to do
 if sys.argv[1] == "taskcli":
     if sys.argv[2] == "add":
@@ -84,6 +81,8 @@ if sys.argv[1] == "taskcli":
         tasklist, next_id = clear_tasklist()
     elif sys.argv[2] == "list":
         if len(sys.argv) > 3:
+            list_tasklist()
+        else:
             if sys.argv[3] == "todo":
                 filtered_tasklist = [task for task in tasklist if task.get("status") == "todo"]
             elif sys.argv[3] == "in-progress":
@@ -93,8 +92,6 @@ if sys.argv[1] == "taskcli":
             print("The filtered tasklist:")
             for task in filtered_tasklist:
                 print(task)
-        else:
-            list_tasklist()
     elif sys.argv[2] == "update":
         try:
             task_id = int(sys.argv[3])
