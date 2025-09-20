@@ -55,8 +55,8 @@ def list_tasklist():
     print("The current tasklist:")
     for dictionary in tasklist:
         print(dictionary)
-    
 def mark_task(updated_status, task_id):
+#ex: python taskcli.py taskcli mark 1 in-progress
     if task_id != "everything":
         for task in tasklist:
             if task["ID"] == task_id:
@@ -67,80 +67,76 @@ def mark_task(updated_status, task_id):
             task["status"] = updated_status
         print(f"All tasks marked as {updated_status}")
 # if statement spam to see what the user wants to do
-if sys.argv[1] == "taskcli":
-    if sys.argv[2] == "add":
-        print(sys.argv[3])
-        add_task(sys.argv[3])
+if sys.argv[1] == "add":
+    add_task(sys.argv[2])
+    list_tasklist()
+elif sys.argv[1] == "delete":
+    try:
+        task_id = int(sys.argv[2])
+        next_id = delete_task(task_id, next_id)
+    except ValueError:
+        print("put in a number for the task id next time")
+    finally:
         list_tasklist()
-    elif sys.argv[2] == "delete":
-        try:
-            task_id = int(sys.argv[3])
-            next_id = delete_task(task_id, next_id)
-        except ValueError:
-            print("put in a number for the task id next time")
-        finally:
-            list_tasklist()
-    elif sys.argv[2] == "clear":
-        tasklist, next_id = clear_tasklist()
-    elif sys.argv[2] == "list":
-        if len(sys.argv) < 4:
-            list_tasklist()
-        else:
-            if sys.argv[3] == "todo":
-                filtered_tasklist = [task for task in tasklist if task["status"] == "todo"]
-            elif sys.argv[3] == "in-progress":
-                filtered_tasklist = [task for task in tasklist if task["status"] == "in-progress"]
-            elif sys.argv[3] == "done":
-                filtered_tasklist = [task for task in tasklist if task["status"] == "done"]
-            print("The filtered tasklist:")
-            if len(filtered_tasklist) == 0:
-                print("...")
-                print("Theres nothing.")
-            else:
-                for task in filtered_tasklist:
-                    print(task)
-    elif sys.argv[2] == "update":
-        try:
-            task_id = int(sys.argv[3])
-            updated_description = sys.argv[4]
-            update_task(updated_description, task_id)
-        except ValueError:
-            print("put in a number for the task id next time")
-        finally:
-            list_tasklist()
-    elif sys.argv[2] == "mark":
-        try:
-            updated_status = sys.argv[4].lower()
-            available_commands =["done", "in-progress", "todo"]
-            if sys.argv[3] == "everything":
-                task_id = "everything"
-            else:
-                task_id = int(sys.argv[3])            
-            if updated_status in available_commands:
-                mark_task(updated_status, task_id)
-            else:
-                print(f'''
-                "{sys.argv[4]}" is not a vaild command, available commands include:
-                - done (marks tasks as done)
-                - in-progress (marks tasks as in progress)
-                - todo (marks tasks as todo)
-                ''')
-        except ValueError:
-            print("put in an actual number for task id next time")
-        finally:
-            list_tasklist()
+elif sys.argv[1] == "clear":
+    tasklist, next_id = clear_tasklist()
+elif sys.argv[1] == "list":
+    if len(sys.argv) < 3:
+        list_tasklist()
     else:
-        print(f'''
-        "{sys.argv[2]}" is not a valid command, available commands include:
-        - add (adds a task, ex: taskcli add "go get groceries")
-        - delete (deletes a task, ex: taskcli delete 1)
-        - clear (clears the tasklist, ex: taskcli clear)
-        - list (lists the tasklist, ex: taskcli list)
-        - update (updates a task description, ex: taskcli update 1 "go play guitar"
-        - mark (marks a task as in-progress or done or todo, ex: taskcli mark 1 in-progress)
-              ''')
+        if sys.argv[2] == "todo":
+            filtered_tasklist = [task for task in tasklist if task["status"] == "todo"]
+        elif sys.argv[2] == "in-progress":
+            filtered_tasklist = [task for task in tasklist if task["status"] == "in-progress"]
+        elif sys.argv[2] == "done":
+            filtered_tasklist = [task for task in tasklist if task["status"] == "done"]
+        print("The filtered tasklist:")
+        if len(filtered_tasklist) == 0:
+            print("...")
+            print("Theres nothing.")
+        else:
+            for task in filtered_tasklist:
+                print(task)
+elif sys.argv[1] == "update":
+    try:
+        task_id = int(sys.argv[2])
+        updated_description = sys.argv[3]
+        update_task(updated_description, task_id)
+    except ValueError:
+        print("put in a number for the task id next time")
+    finally:
+        list_tasklist()
+elif sys.argv[1] == "mark":
+    try:
+        updated_status = sys.argv[3].lower()
+        available_commands =["done", "in-progress", "todo"]
+        if sys.argv[2] == "everything":
+            task_id = "everything"
+        else:
+            task_id = int(sys.argv[2])            
+        if updated_status in available_commands:
+                mark_task(updated_status, task_id)
+        else:
+            print(f'''
+            "{sys.argv[3]}" is not a vaild command, available commands include:
+            - done (marks tasks as done)
+            - in-progress (marks tasks as in progress)
+            - todo (marks tasks as todo)
+            ''')
+    except ValueError:
+        print("put in an actual number for task id next time")
+    finally:
+        list_tasklist()
 else:
-   print("put taskcli first before the commands")
+    print(f'''
+    "{sys.argv[2]}" is not a valid command, available commands include:
+    - add (adds a task, ex: taskcli add "go get groceries")
+    - delete (deletes a task, ex: taskcli delete 1)
+    - clear (clears the tasklist, ex: taskcli clear)
+    - list (lists the tasklist, ex: taskcli list)
+    - update (updates a task description, ex: taskcli update 1 "go play guitar"
+    - mark (marks a task as in-progress or done or todo, ex: taskcli mark 1 in-progress)
+        ''')
 
 #saving the tasklist and the next_id so it doesnt reset back to 1
 with open ("taskcli.json", "w") as tasks:
